@@ -1,16 +1,34 @@
 {
+  "name": "@kauai/body",
+  "version": "1.0.0",
+  "description": "Kauai body parser middleware",
+  "main": "build/index.js",
   "type": "module",
+  "types": "build/index.d.ts",
   "engines": {
     "node": ">=16.5.0",
     "npm": ">=7.19.1"
   },
   "repository": {
-    "type": "git"
+    "type": "git",
+    "url": "git+https://github.com/b2broker/body.git"
   },
-  "keywords": [],
+  "keywords": [
+    "HTTP",
+    "kauai",
+    "body"
+  ],
+  "author": "Sergey Bakulin <sbakulin@b2broker.net>",
   "license": "AGPL-3.0-only",
+  "bugs": {
+    "url": "https://github.com/b2broker/body/issues"
+  },
+  "homepage": "https://github.com/b2broker/body#readme",
   "directories": {
     "test": "test"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "npm run build:remove && tsc",
