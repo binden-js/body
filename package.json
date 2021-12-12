@@ -1,6 +1,6 @@
 {
   "name": "@kauai/body",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Kauai body parser middleware",
   "main": "build/index.js",
   "type": "module",
