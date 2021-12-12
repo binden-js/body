@@ -73,6 +73,6 @@
     "typedoc": "^0.22.10"
   },
   "peerDependencies": {
-    "kauai": "^1.0.0"
+    "kauai": "^1.0.6"
   }
 }
