@@ -32,7 +32,7 @@
     "prettier:write": "prettier -c -w .",
     "preversion": "npm run docs:build",
     "release": "semantic-release",
-    "test": "mocha 'dist/test/**/*.spec.js' --ui=tdd --full-trace --bail"
+    "test": "mocha 'dist/test/**/*.test.js' --ui=tdd --full-trace --bail"
   },
   "repository": {
     "type": "git",
