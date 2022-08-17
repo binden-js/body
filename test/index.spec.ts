@@ -181,8 +181,8 @@ suite("BodyParser", () => {
     app.use(new BodyParser(), new AssertMiddleware());
 
     const brotli = await brotliCompress(JSON.stringify(expected));
-    const _gzip = await gzip(await gzip(brotli));
-    const body = await deflate(_gzip);
+    const doubleGzip = await gzip(await gzip(brotli));
+    const body = await deflate(doubleGzip);
 
     const ce = "br, x-gzip, gzip, deflate";
     const headers = { "Content-Encoding": ce, "Content-Type": ct_json };

@@ -1,5 +1,5 @@
-import { finished } from "stream";
-import { createInflate, createGunzip, createBrotliDecompress } from "zlib";
+import { finished } from "node:stream";
+import { createInflate, createGunzip, createBrotliDecompress } from "node:zlib";
 import {
   KauaiError,
   Middleware,
@@ -11,7 +11,7 @@ import {
 
 import type { Duplex, Readable } from "stream";
 
-export type IBodyContentType = typeof ct_json | typeof ct_text | typeof ct_form;
+export type IBodyContentType = typeof ct_form | typeof ct_json | typeof ct_text;
 
 export class BodyParser extends Middleware {
   public async run(context: Context): Promise<void> {
