@@ -37,5 +37,5 @@ app.use("/deposit", new Router().post(new BodyParser(), new MyMiddleware()));
 ### Test
 
 ```bash
-npm run test:ci
+npm test
 ```
