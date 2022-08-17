@@ -1,13 +1,13 @@
 import { finished } from "node:stream";
 import { createInflate, createGunzip, createBrotliDecompress } from "node:zlib";
 import {
-  KauaiError,
+  BindenError,
   Middleware,
   Context,
   ct_text,
   ct_json,
   ct_form,
-} from "kauai";
+} from "binden";
 
 import type { Duplex, Readable } from "stream";
 
@@ -18,7 +18,7 @@ export class BodyParser extends Middleware {
     const { name: middleware } = BodyParser;
     const { request, log: logger } = context;
     const log = logger.child({ middleware });
-    const { aborted, complete, destroyed, method = "GET" } = request;
+    const { aborted, destroyed, method = "GET" } = request;
 
     if (
       method === "GET" ||
@@ -30,8 +30,8 @@ export class BodyParser extends Middleware {
       return;
     }
 
-    if (aborted || complete || destroyed) {
-      log.debug("Skip parsing", { aborted, complete, destroyed });
+    if (aborted || destroyed) {
+      log.debug("Skip parsing", { aborted, destroyed });
       return;
     }
 
@@ -55,7 +55,7 @@ export class BodyParser extends Middleware {
         streams.push([encoding, createBrotliDecompress()]);
       } else {
         log.debug("Unsupported encoding", { encoding });
-        throw new KauaiError(415);
+        throw new BindenError(415);
       }
     }
 
@@ -65,7 +65,7 @@ export class BodyParser extends Middleware {
       for (const [encoding, decompresser] of streams) {
         decompresser.once("error", (error) => {
           log.debug("Decoding failed", { error, encoding });
-          reject(new KauaiError(415));
+          reject(new BindenError(415));
         });
         stream.pipe(decompresser);
         stream = decompresser;
@@ -98,7 +98,7 @@ export class BodyParser extends Middleware {
         body,
       });
 
-      throw new KauaiError(415);
+      throw new BindenError(415);
     }
   }
 }

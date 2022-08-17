@@ -1,13 +1,13 @@
-import { deepStrictEqual, ok, fail } from "assert";
-import { Server } from "http";
+import { deepStrictEqual, ok, fail } from "node:assert";
+import { Server } from "node:http";
 import {
   brotliCompress as brotliCompressAsync,
   gzip as gzipAsync,
   deflate as deflateAsync,
   InputType,
-} from "zlib";
+} from "node:zlib";
 import fetch, { FetchError } from "node-fetch";
-import { Kauai, Middleware, Context, ct_text, ct_json } from "kauai";
+import { Binden, Middleware, Context, ct_text, ct_json } from "binden";
 
 import { BodyParser } from "../index.js";
 
@@ -51,11 +51,11 @@ const port = 8080;
 const url = `http://localhost:${port}/`;
 
 suite("BodyParser", () => {
-  let app: Kauai;
+  let app: Binden;
   let server: Server;
 
   setup((done) => {
-    app = new Kauai();
+    app = new Binden();
     server = app.createServer().listen(port, done);
   });
 
