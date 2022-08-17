@@ -35,7 +35,7 @@ jobs:
         run: npm run lint
 
       - name: Tests
-        run: npm run test:ci
+        run: npm test
 
       - name: Publish (test)
         run: npm run publish:test
