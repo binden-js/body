@@ -54,7 +54,7 @@
   },
   "homepage": "https://github.com/binden-js/body#readme",
   "peerDependencies": {
-    "kauai": "^1.0.6"
+    "binden": "^1.0.0"
   },
   "devDependencies": {
     "@binden/commitlint-config": "^1.0.0",
