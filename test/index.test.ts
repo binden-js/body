@@ -6,7 +6,7 @@ import {
   deflate as deflateAsync,
   InputType,
 } from "node:zlib";
-import fetch, { FetchError } from "node-fetch";
+import { fetch, errors, setGlobalDispatcher, Agent } from "undici";
 import { Binden, Middleware, Context, ct_text, ct_json } from "binden";
 
 import { BodyParser } from "../index.js";
@@ -54,6 +54,11 @@ suite("BodyParser", () => {
   let app: Binden;
   let server: Server;
 
+  suiteSetup(() => {
+    const agent = new Agent({ keepAliveTimeout: 1, keepAliveMaxTimeout: 1 });
+    setGlobalDispatcher(agent);
+  });
+
   setup((done) => {
     app = new Binden();
     server = app.createServer().listen(port, done);
@@ -89,7 +94,6 @@ suite("BodyParser", () => {
     ok((await fetch(url, { method: "GET", headers })).ok);
     ok((await fetch(url, { method: "HEAD", headers })).ok);
     ok((await fetch(url, { method: "OPTIONS", headers })).ok);
-    ok((await fetch(url, { method: "TRACE", headers })).ok);
   });
 
   test("Destroyed socket", async () => {
@@ -117,13 +121,11 @@ suite("BodyParser", () => {
       await fetch(url, { method: "POST", body, headers });
       fail("Should throw an Error");
     } catch (error: unknown) {
-      ok(error instanceof FetchError);
-      deepStrictEqual(error.type, "system");
-      deepStrictEqual(error.code, "ECONNRESET");
-      deepStrictEqual(
-        error.message,
-        `request to ${url} failed, reason: socket hang up`
-      );
+      ok(error instanceof TypeError);
+      deepStrictEqual(error.message, `fetch failed`);
+      ok(error.cause instanceof errors.SocketError);
+      deepStrictEqual(error.cause.message, `other side closed`);
+      deepStrictEqual(error.cause.code, `UND_ERR_SOCKET`);
     }
     await promise;
   });
