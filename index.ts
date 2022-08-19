@@ -20,12 +20,7 @@ export class BodyParser extends Middleware {
     const log = logger.child({ middleware });
     const { aborted, destroyed, method = "GET" } = request;
 
-    if (
-      method === "GET" ||
-      method === "HEAD" ||
-      method === "OPTIONS" ||
-      method === "TRACE"
-    ) {
+    if (BodyParser.#methods.includes(method)) {
       log.debug("Unsupported method", { method });
       return;
     }
@@ -100,6 +95,11 @@ export class BodyParser extends Middleware {
 
       throw new BindenError(415);
     }
+  }
+
+  /** Array of methods with no request body */
+  static get #methods(): string[] {
+    return ["CONNECT", "GET", "HEAD", "OPTIONS", "TRACE"];
   }
 }
 
