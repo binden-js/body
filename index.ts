@@ -18,15 +18,15 @@ export class BodyParser extends Middleware {
     const { name: middleware } = BodyParser;
     const { request, log: logger } = context;
     const log = logger.child({ middleware });
-    const { aborted, destroyed, method = "GET" } = request;
+    const { destroyed, method = "GET" } = request;
 
     if (BodyParser.#methods.includes(method)) {
       log.debug("Unsupported method", { method });
       return;
     }
 
-    if (aborted || destroyed) {
-      log.debug("Skip parsing", { aborted, destroyed });
+    if (destroyed) {
+      log.debug("Skip parsing", { destroyed });
       return;
     }
 
