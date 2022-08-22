@@ -60,7 +60,7 @@ export class BodyParser extends Middleware {
       for (const [encoding, decompresser] of streams) {
         decompresser.once("error", (error) => {
           log.debug("Decoding failed", { error, encoding });
-          reject(new BindenError(415));
+          reject(new BindenError(415, { cause: error }));
         });
         stream.pipe(decompresser);
         stream = decompresser;
@@ -93,7 +93,7 @@ export class BodyParser extends Middleware {
         body,
       });
 
-      throw new BindenError(415);
+      throw new BindenError(415, { cause: error as Error });
     }
   }
 
