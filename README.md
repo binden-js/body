@@ -31,7 +31,7 @@ class MyMiddleware extends Middleware {
   }
 }
 
-app.use("/deposit", new Router().post(new BodyParser(), new MyMiddleware()));
+app.use("/deposit", new Router().post(BodyParser, new MyMiddleware()));
 ```
 
 ### Test

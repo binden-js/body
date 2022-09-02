@@ -110,4 +110,4 @@ export class BodyParser extends Middleware {
   ]);
 }
 
-export default BodyParser;
+export default new BodyParser();
