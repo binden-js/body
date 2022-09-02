@@ -6,8 +6,15 @@ import {
   deflate as deflateAsync,
   InputType,
 } from "node:zlib";
-import { fetch, errors, setGlobalDispatcher, Agent } from "undici";
-import { Binden, Middleware, Context, ct_text, ct_json } from "binden";
+import {
+  errors,
+  getGlobalDispatcher,
+  request,
+  setGlobalDispatcher,
+  Agent,
+  Dispatcher,
+} from "undici";
+import { Binden, Middleware, Context, ct_text, ct_json, ct_form } from "binden";
 
 import { BodyParser } from "../index.js";
 
@@ -53,8 +60,10 @@ const url = `http://localhost:${port}/`;
 suite("BodyParser", () => {
   let app: Binden;
   let server: Server;
+  let original_agent: Dispatcher;
 
   suiteSetup(() => {
+    original_agent = getGlobalDispatcher();
     const agent = new Agent({ keepAliveTimeout: 1, keepAliveMaxTimeout: 1 });
     setGlobalDispatcher(agent);
   });
@@ -76,24 +85,36 @@ suite("BodyParser", () => {
     app.use(new BodyParser(), new AssertMiddleware());
 
     const headers = { "Content-Type": ct_text };
-    const response = await fetch(url, { method: "POST", body, headers });
-    ok(response.ok);
+    const response = await request(url, { method: "POST", body, headers });
+    ok(response.statusCode === 200);
+    const text = await response.body.text();
+    deepStrictEqual(text, "");
   });
 
-  test("Unsupported method", async () => {
+  test("Unsupported methods", async () => {
     class AssertMiddleware extends Middleware {
       public run(ct: Context): Promise<void> {
-        deepStrictEqual(typeof ct.request.body, "undefined");
+        ok(typeof ct.request.body === "undefined");
         return ct.send();
       }
     }
 
     app.use(new BodyParser(), new AssertMiddleware());
 
-    const headers = { "Content-Type": ct_text };
-    ok((await fetch(url, { method: "GET", headers })).ok);
-    ok((await fetch(url, { method: "HEAD", headers })).ok);
-    ok((await fetch(url, { method: "OPTIONS", headers })).ok);
+    const { unsupported_methods } = BodyParser;
+    // `CONNECT` is not supported, if any
+    unsupported_methods.delete("CONNECT");
+
+    for (const method of unsupported_methods) {
+      const headers = { "Content-Type": ct_text };
+      const response = await request(url, {
+        method: method as Dispatcher.HttpMethod,
+        headers,
+      });
+      ok(response.statusCode === 200);
+      const text = await response.body.text();
+      deepStrictEqual(text, "");
+    }
   });
 
   test("Destroyed socket", async () => {
@@ -106,7 +127,7 @@ suite("BodyParser", () => {
       }
       class AssertMiddleware extends Middleware {
         public run(ct: Context): Promise<void> {
-          deepStrictEqual(typeof ct.request.body, "undefined");
+          ok(typeof ct.request.body === "undefined");
           resolve();
           return ct.send();
         }
@@ -118,14 +139,12 @@ suite("BodyParser", () => {
     const body = "Hello World";
     const headers = { "Content-Type": ct_text };
     try {
-      await fetch(url, { method: "POST", body, headers });
+      await request(url, { method: "POST", body, headers });
       fail("Should throw an Error");
     } catch (error: unknown) {
-      ok(error instanceof TypeError);
-      deepStrictEqual(error.message, `fetch failed`);
-      ok(error.cause instanceof errors.SocketError);
-      deepStrictEqual(error.cause.message, `other side closed`);
-      deepStrictEqual(error.cause.code, `UND_ERR_SOCKET`);
+      ok(error instanceof errors.SocketError);
+      deepStrictEqual(error.message, `other side closed`);
+      deepStrictEqual(error.code, `UND_ERR_SOCKET`);
     }
     await promise;
   });
@@ -143,8 +162,10 @@ suite("BodyParser", () => {
 
     const headers = { "Content-Type": ct_json };
     const body = JSON.stringify(expected);
-    const response = await fetch(url, { method: "POST", body, headers });
-    ok(response.ok);
+    const response = await request(url, { method: "POST", body, headers });
+    ok(response.statusCode === 200);
+    const text = await response.body.text();
+    deepStrictEqual(text, "");
   });
 
   test("JSON (invalid)", async () => {
@@ -152,8 +173,10 @@ suite("BodyParser", () => {
 
     const headers = { "Content-Type": ct_json };
     const body = "Not a JSON";
-    const response = await fetch(url, { method: "POST", body, headers });
-    deepStrictEqual(response.status, 415);
+    const response = await request(url, { method: "POST", body, headers });
+    deepStrictEqual(response.statusCode, 415);
+    const text = await response.body.text();
+    deepStrictEqual(text, "");
   });
 
   test("form", async () => {
@@ -167,8 +190,15 @@ suite("BodyParser", () => {
 
     app.use(new BodyParser(), new AssertMiddleware());
 
-    const response = await fetch(url, { method: "POST", body });
-    ok(response.ok);
+    const headers = { "Content-Type": ct_form };
+    const response = await request(url, {
+      method: "POST",
+      headers,
+      body: body.toString(),
+    });
+    ok(response.statusCode === 200);
+    const text = await response.body.text();
+    deepStrictEqual(text, "");
   });
 
   test("encoding", async () => {
@@ -188,15 +218,17 @@ suite("BodyParser", () => {
 
     const ce = "br, x-gzip, gzip, deflate";
     const headers = { "Content-Encoding": ce, "Content-Type": ct_json };
-    const response = await fetch(url, { method: "POST", body, headers });
-    ok(response.ok);
+    const response = await request(url, { method: "POST", body, headers });
+    ok(response.statusCode);
+    const text = await response.body.text();
+    deepStrictEqual(text, "");
   });
 
   test("Missing `Content-Type`", async () => {
     const body = "Hello World";
     class AssertMiddleware extends Middleware {
       public run(ct: Context): Promise<void> {
-        deepStrictEqual(typeof ct.request.body, "undefined");
+        ok(typeof ct.request.body === "undefined");
         return ct.send();
       }
     }
@@ -205,8 +237,10 @@ suite("BodyParser", () => {
 
     const headers = { "Content-Type": "" };
 
-    const response = await fetch(url, { method: "POST", body, headers });
-    deepStrictEqual(response.status, 200);
+    const response = await request(url, { method: "POST", body, headers });
+    deepStrictEqual(response.statusCode, 200);
+    const text = await response.body.text();
+    deepStrictEqual(text, "");
   });
 
   test("Unsupported `Content-Type`", async () => {
@@ -214,7 +248,7 @@ suite("BodyParser", () => {
 
     class AssertMiddleware extends Middleware {
       public run(ct: Context): Promise<void> {
-        deepStrictEqual(typeof ct.request.body, "undefined");
+        ok(typeof ct.request.body === "undefined");
         return ct.send();
       }
     }
@@ -222,8 +256,10 @@ suite("BodyParser", () => {
     app.use(new BodyParser(), new AssertMiddleware());
 
     const headers = { "Content-Type": "__unsupported__" };
-    const response = await fetch(url, { method: "POST", body, headers });
-    deepStrictEqual(response.status, 200);
+    const response = await request(url, { method: "POST", body, headers });
+    deepStrictEqual(response.statusCode, 200);
+    const text = await response.body.text();
+    deepStrictEqual(text, "");
   });
 
   test("Unsupported `Content-Encoding`", async () => {
@@ -232,8 +268,10 @@ suite("BodyParser", () => {
     app.use(new BodyParser());
 
     const headers = { "Content-Type": ct_json, "Content-Encoding": "compress" };
-    const response = await fetch(url, { method: "POST", body, headers });
-    deepStrictEqual(response.status, 415);
+    const response = await request(url, { method: "POST", body, headers });
+    deepStrictEqual(response.statusCode, 415);
+    const text = await response.body.text();
+    deepStrictEqual(text, "");
   });
 
   test("Decompressions errors", async () => {
@@ -242,9 +280,15 @@ suite("BodyParser", () => {
     app.use(new BodyParser());
 
     const headers = { "Content-Type": ct_text, "Content-Encoding": "br" };
-    const response = await fetch(url, { method: "POST", body, headers });
-    deepStrictEqual(response.status, 415);
+    const response = await request(url, { method: "POST", body, headers });
+    deepStrictEqual(response.statusCode, 415);
+    const text = await response.body.text();
+    deepStrictEqual(text, "");
   });
 
   teardown((done) => server.close(done));
+
+  suiteTeardown(() => {
+    setGlobalDispatcher(original_agent);
+  });
 });
