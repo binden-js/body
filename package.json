@@ -6,8 +6,8 @@
   "type": "module",
   "types": "dist/index.d.ts",
   "engines": {
-    "node": ">=16.5.0",
-    "npm": ">=7.19.1"
+    "node": ">=18.8.0",
+    "npm": ">=8.18.0"
   },
   "scripts": {
     "build": "tsc",
@@ -31,7 +31,6 @@
     "prettier": "prettier -c .",
     "prettier:write": "prettier -c -w .",
     "preversion": "npm run docs:build",
-    "release": "semantic-release",
     "test": "mocha 'dist/test/**/*.test.js' --ui=tdd --full-trace --bail"
   },
   "repository": {
@@ -46,8 +45,8 @@
   "author": "Sergey Bakulin <sergey.bakulin.github@gmail.com>",
   "license": "AGPL-3.0-only",
   "directories": {
-    "test": "test",
-    "doc": "docs"
+    "doc": "docs",
+    "test": "test"
   },
   "bugs": {
     "url": "https://github.com/binden-js/body/issues"
