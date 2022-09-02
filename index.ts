@@ -20,7 +20,7 @@ export class BodyParser extends Middleware {
     const log = logger.child({ middleware });
     const { destroyed, method = "GET" } = request;
 
-    if (BodyParser.#methods.includes(method)) {
+    if (BodyParser.#methods.has(method)) {
       log.debug("Unsupported method", { method });
       return;
     }
@@ -97,10 +97,17 @@ export class BodyParser extends Middleware {
     }
   }
 
-  /** Array of methods with no request body */
-  static get #methods(): string[] {
-    return ["CONNECT", "GET", "HEAD", "OPTIONS", "TRACE"];
+  /** Set of methods with no request body */
+  public static get unsupported_methods(): Set<string> {
+    return new Set(BodyParser.#methods);
   }
+
+  static readonly #methods: ReadonlySet<string> = new Set([
+    "GET",
+    "HEAD",
+    "OPTIONS",
+    "TRACE",
+  ]);
 }
 
 export default BodyParser;
