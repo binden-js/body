@@ -34,6 +34,32 @@ class MyMiddleware extends Middleware {
 app.use("/deposit", new Router().post(BodyParser, new MyMiddleware()));
 ```
 
+### Custom `parse` function
+
+```typescript
+import { Binden } from "binden";
+import AJV, { JTDDataType } from "ajv/dist/jtd.js";
+import BodyParser from "@binden/body";
+const ajv = new AJV();
+const schema = {
+  properties: { username: { type: "string" }, password: { type: "string" } },
+  additionalProperties: false,
+};
+const parse = ajv.compileParser<JTDDataType<typeof schema>>(schema);
+const body_parser = new BodyParser({ parse });
+const echo = (context) => {
+  const { body } = context.request;
+  context.log.info("Body has been parsed (or not)", { body });
+  return context.json(body);
+};
+new Binden()
+  .use("/login", new Router().post(BodyParser, echo))
+  .createServer()
+  .listen(port, () => {
+    console.log(`Server is listening on the port ${port}`);
+  });
+```
+
 ### Test
 
 ```bash

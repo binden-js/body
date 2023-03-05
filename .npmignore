@@ -1,3 +1,6 @@
+# c8 config - https://github.com/bcoe/c8/
+.c8rc.json
+
 # Coverage directory used by c8
 coverage
 
@@ -25,6 +28,9 @@ docs
 
 # lint-staged config - https://github.com/okonet/lint-staged
 .lintstagedrc.json
+
+# mocha config - https://github.com/mochajs/mocha
+.mocharc.json
 
 # Prettier ignore
 .prettierignore

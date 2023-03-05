@@ -3,6 +3,7 @@ import { createInflate, createGunzip, createBrotliDecompress } from "node:zlib";
 import {
   BindenError,
   Middleware,
+  IMiddlewareParams,
   Context,
   ct_text,
   ct_json,
@@ -13,7 +14,23 @@ import type { Duplex, Readable } from "stream";
 
 export type IBodyContentType = typeof ct_form | typeof ct_json | typeof ct_text;
 
-export class BodyParser extends Middleware {
+export type IParse<T = unknown> = (input: string) => T | undefined;
+
+export interface IBodyParserOptions<T = unknown> extends IMiddlewareParams {
+  parse?: IParse<T>;
+}
+
+export class BodyParser<T = unknown> extends Middleware {
+  readonly #parse: IParse<T>;
+
+  public constructor({ parse, ...rest }: IBodyParserOptions = {}) {
+    super(rest);
+    if (typeof parse !== "undefined" && typeof parse !== "function") {
+      throw new TypeError("`parse` is not a function");
+    }
+    this.#parse = parse ?? JSON.parse;
+  }
+
   public async run(context: Context): Promise<void> {
     const { name: middleware } = BodyParser;
     const { request, log: logger } = context;
@@ -82,7 +99,7 @@ export class BodyParser extends Middleware {
     try {
       request.body =
         type === ct_json
-          ? JSON.parse(body)
+          ? this.#parse(body)
           : type === ct_form
           ? new URLSearchParams(body)
           : body;

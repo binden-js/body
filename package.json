@@ -12,7 +12,7 @@
   "scripts": {
     "build": "tsc",
     "build:remove": "rm -rf dist",
-    "ci:all": "npm ci && npm run prettier && npm run eslint && npm run commitlint && npm test && npm publish --dry-run && npm run coverage",
+    "ci:all": "npm ci && npm run prettier && npm run eslint && npm run commitlint && npm test && npm publish --dry-run && npm run docs:build && npm run coverage",
     "commitlint": "commitlint --verbose --from=$( git rev-list --max-parents=0 $( git rev-parse --abbrev-ref HEAD ) )",
     "coverage": "c8 npm test",
     "docs:build": "typedoc",
@@ -20,18 +20,17 @@
     "eslint:fix": "npm run eslint -- --fix",
     "install:clean": "npm install",
     "postbuild": "prettier -c -w dist",
-    "postcoverage": "c8 report --reporter=lcov",
+    "postcoverage": "c8 report",
     "postdocs:build": "prettier -c -w docs",
     "postpublish": "npm run build:remove",
     "prebuild": "npm run build:remove",
     "preinstall:clean": "rm -rf node_modules package-lock.json",
     "prepare": "husky install",
     "prepublishOnly": "npm run build",
-    "pretest": "npm run build",
     "prettier": "prettier -c .",
     "prettier:write": "prettier -c -w .",
     "preversion": "npm run docs:build",
-    "test": "mocha 'dist/test/**/*.test.js' --ui=tdd --full-trace --bail"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -53,13 +52,14 @@
   },
   "homepage": "https://github.com/binden-js/body#readme",
   "peerDependencies": {
-    "binden": "^1.1.1"
+    "binden": "^1.2.0"
   },
   "devDependencies": {
     "@binden/commitlint-config": "^1.0.1",
     "@binden/semantic-release-config": "^1.1.1",
     "@binden/tsconfig": "^1.0.1",
     "@types/mocha": "^10.0.1",
+    "ajv": "^8.12.0",
     "c8": "^7.13.0",
     "eslint-config-binden-ts": "^1.0.2",
     "husky": "^8.0.3",
