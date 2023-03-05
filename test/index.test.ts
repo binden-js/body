@@ -1,4 +1,4 @@
-import { deepStrictEqual, ok, fail } from "node:assert";
+import { deepEqual, ok, fail } from "node:assert/strict";
 import { Server } from "node:http";
 import {
   brotliCompress as brotliCompressAsync,
@@ -77,7 +77,7 @@ suite("BodyParser", () => {
     const body = "Hello World";
     class AssertMiddleware extends Middleware {
       public run(ct: Context): Promise<void> {
-        deepStrictEqual(ct.request.body, body);
+        deepEqual(ct.request.body, body);
         return ct.send();
       }
     }
@@ -88,7 +88,7 @@ suite("BodyParser", () => {
     const response = await request(url, { method: "POST", body, headers });
     ok(response.statusCode === 200);
     const text = await response.body.text();
-    deepStrictEqual(text, "");
+    deepEqual(text, "");
   });
 
   test("Unsupported methods", async () => {
@@ -113,7 +113,7 @@ suite("BodyParser", () => {
       });
       ok(response.statusCode === 200);
       const text = await response.body.text();
-      deepStrictEqual(text, "");
+      deepEqual(text, "");
     }
   });
 
@@ -122,7 +122,7 @@ suite("BodyParser", () => {
       class DestroySocket extends Middleware {
         public run(ct: Context): void {
           ct.request.destroy();
-          deepStrictEqual(ct.request.destroyed, true);
+          deepEqual(ct.request.destroyed, true);
         }
       }
       class AssertMiddleware extends Middleware {
@@ -143,8 +143,8 @@ suite("BodyParser", () => {
       fail("Should throw an Error");
     } catch (error: unknown) {
       ok(error instanceof errors.SocketError);
-      deepStrictEqual(error.message, `other side closed`);
-      deepStrictEqual(error.code, `UND_ERR_SOCKET`);
+      deepEqual(error.message, `other side closed`);
+      deepEqual(error.code, `UND_ERR_SOCKET`);
     }
     await promise;
   });
@@ -153,7 +153,7 @@ suite("BodyParser", () => {
     const expected = { message: "Hello World" };
     class AssertMiddleware extends Middleware {
       public run(ct: Context): Promise<void> {
-        deepStrictEqual(ct.request.body, expected);
+        deepEqual(ct.request.body, expected);
         return ct.send();
       }
     }
@@ -165,7 +165,7 @@ suite("BodyParser", () => {
     const response = await request(url, { method: "POST", body, headers });
     ok(response.statusCode === 200);
     const text = await response.body.text();
-    deepStrictEqual(text, "");
+    deepEqual(text, "");
   });
 
   test("JSON (invalid)", async () => {
@@ -174,16 +174,16 @@ suite("BodyParser", () => {
     const headers = { "Content-Type": ct_json };
     const body = "Not a JSON";
     const response = await request(url, { method: "POST", body, headers });
-    deepStrictEqual(response.statusCode, 415);
+    deepEqual(response.statusCode, 415);
     const text = await response.body.text();
-    deepStrictEqual(text, "");
+    deepEqual(text, "");
   });
 
   test("form", async () => {
     const body = new URLSearchParams({ message: "Hello World" });
     class AssertMiddleware extends Middleware {
       public run(ct: Context): Promise<void> {
-        deepStrictEqual(ct.request.body, body);
+        deepEqual(ct.request.body, body);
         return ct.send();
       }
     }
@@ -198,14 +198,14 @@ suite("BodyParser", () => {
     });
     ok(response.statusCode === 200);
     const text = await response.body.text();
-    deepStrictEqual(text, "");
+    deepEqual(text, "");
   });
 
   test("encoding", async () => {
     const expected = { message: "Hello World" };
     class AssertMiddleware extends Middleware {
       public run(ct: Context): Promise<void> {
-        deepStrictEqual(ct.request.body, expected);
+        deepEqual(ct.request.body, expected);
         return ct.send();
       }
     }
@@ -221,7 +221,7 @@ suite("BodyParser", () => {
     const response = await request(url, { method: "POST", body, headers });
     ok(response.statusCode);
     const text = await response.body.text();
-    deepStrictEqual(text, "");
+    deepEqual(text, "");
   });
 
   test("Missing `Content-Type`", async () => {
@@ -238,9 +238,9 @@ suite("BodyParser", () => {
     const headers = { "Content-Type": "" };
 
     const response = await request(url, { method: "POST", body, headers });
-    deepStrictEqual(response.statusCode, 200);
+    deepEqual(response.statusCode, 200);
     const text = await response.body.text();
-    deepStrictEqual(text, "");
+    deepEqual(text, "");
   });
 
   test("Unsupported `Content-Type`", async () => {
@@ -257,9 +257,9 @@ suite("BodyParser", () => {
 
     const headers = { "Content-Type": "__unsupported__" };
     const response = await request(url, { method: "POST", body, headers });
-    deepStrictEqual(response.statusCode, 200);
+    deepEqual(response.statusCode, 200);
     const text = await response.body.text();
-    deepStrictEqual(text, "");
+    deepEqual(text, "");
   });
 
   test("Unsupported `Content-Encoding`", async () => {
@@ -269,9 +269,9 @@ suite("BodyParser", () => {
 
     const headers = { "Content-Type": ct_json, "Content-Encoding": "compress" };
     const response = await request(url, { method: "POST", body, headers });
-    deepStrictEqual(response.statusCode, 415);
+    deepEqual(response.statusCode, 415);
     const text = await response.body.text();
-    deepStrictEqual(text, "");
+    deepEqual(text, "");
   });
 
   test("Decompressions errors", async () => {
@@ -281,9 +281,9 @@ suite("BodyParser", () => {
 
     const headers = { "Content-Type": ct_text, "Content-Encoding": "br" };
     const response = await request(url, { method: "POST", body, headers });
-    deepStrictEqual(response.statusCode, 415);
+    deepEqual(response.statusCode, 415);
     const text = await response.body.text();
-    deepStrictEqual(text, "");
+    deepEqual(text, "");
   });
 
   teardown((done) => server.close(done));
