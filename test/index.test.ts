@@ -1,4 +1,5 @@
-import { deepEqual, ok, fail } from "node:assert/strict";
+/* eslint-disable init-declarations */
+import { deepEqual, ok, fail, throws } from "node:assert/strict";
 import { Server } from "node:http";
 import {
   brotliCompress as brotliCompressAsync,
@@ -6,17 +7,11 @@ import {
   deflate as deflateAsync,
   InputType,
 } from "node:zlib";
-import {
-  errors,
-  getGlobalDispatcher,
-  request,
-  setGlobalDispatcher,
-  Agent,
-  Dispatcher,
-} from "undici";
-import { Binden, Middleware, Context, ct_text, ct_json, ct_form } from "binden";
+import AJV, { JTDDataType } from "ajv/dist/jtd.js";
+import { errors, request } from "undici";
+import { Binden, Context, ct_text, ct_json, ct_form } from "binden";
 
-import { BodyParser } from "../index.js";
+import { BodyParser, IParse } from "../index.js";
 
 function brotliCompress(data: InputType): Promise<Buffer> {
   return new Promise<Buffer>((resolve, reject) => {
@@ -60,29 +55,27 @@ const url = `http://localhost:${port}/`;
 suite("BodyParser", () => {
   let app: Binden;
   let server: Server;
-  let original_agent: Dispatcher;
-
-  suiteSetup(() => {
-    original_agent = getGlobalDispatcher();
-    const agent = new Agent({ keepAliveTimeout: 1, keepAliveMaxTimeout: 1 });
-    setGlobalDispatcher(agent);
-  });
 
   setup((done) => {
     app = new Binden();
     server = app.createServer().listen(port, done);
   });
 
+  test("constructor (with an invalid `parse` option)", () => {
+    throws(
+      () => new BodyParser({ parse: 2 as unknown as IParse }),
+      new TypeError("`parse` is not a function")
+    );
+  });
+
   test("text", async () => {
     const body = "Hello World";
-    class AssertMiddleware extends Middleware {
-      public run(ct: Context): Promise<void> {
-        deepEqual(ct.request.body, body);
-        return ct.send();
-      }
-    }
+    const assert = (ct: Context): Promise<void> => {
+      deepEqual(ct.request.body, body);
+      return ct.send();
+    };
 
-    app.use(new BodyParser(), new AssertMiddleware());
+    app.use(new BodyParser(), assert);
 
     const headers = { "Content-Type": ct_text };
     const response = await request(url, { method: "POST", body, headers });
@@ -92,14 +85,12 @@ suite("BodyParser", () => {
   });
 
   test("Unsupported methods", async () => {
-    class AssertMiddleware extends Middleware {
-      public run(ct: Context): Promise<void> {
-        ok(typeof ct.request.body === "undefined");
-        return ct.send();
-      }
-    }
+    const assert = (ct: Context): Promise<void> => {
+      ok(typeof ct.request.body === "undefined");
+      return ct.send();
+    };
 
-    app.use(new BodyParser(), new AssertMiddleware());
+    app.use(new BodyParser(), assert);
 
     const { unsupported_methods } = BodyParser;
     // `CONNECT` is not supported, if any
@@ -108,7 +99,7 @@ suite("BodyParser", () => {
     for (const method of unsupported_methods) {
       const headers = { "Content-Type": ct_text };
       const response = await request(url, {
-        method: method as Dispatcher.HttpMethod,
+        method: method as "GET",
         headers,
       });
       ok(response.statusCode === 200);
@@ -119,21 +110,17 @@ suite("BodyParser", () => {
 
   test("Destroyed socket", async () => {
     const promise = new Promise<void>((resolve) => {
-      class DestroySocket extends Middleware {
-        public run(ct: Context): void {
-          ct.request.destroy();
-          deepEqual(ct.request.destroyed, true);
-        }
-      }
-      class AssertMiddleware extends Middleware {
-        public run(ct: Context): Promise<void> {
-          ok(typeof ct.request.body === "undefined");
-          resolve();
-          return ct.send();
-        }
-      }
+      const destroy = (ct: Context): void => {
+        ct.request.destroy();
+        deepEqual(ct.request.destroyed, true);
+      };
+      const assert = (ct: Context): Promise<void> => {
+        ok(typeof ct.request.body === "undefined");
+        resolve();
+        return ct.send();
+      };
 
-      app.use(new DestroySocket(), new BodyParser(), new AssertMiddleware());
+      app.use(destroy, new BodyParser(), assert);
     });
 
     const body = "Hello World";
@@ -151,14 +138,41 @@ suite("BodyParser", () => {
 
   test("JSON", async () => {
     const expected = { message: "Hello World" };
-    class AssertMiddleware extends Middleware {
-      public run(ct: Context): Promise<void> {
-        deepEqual(ct.request.body, expected);
-        return ct.send();
-      }
-    }
+    const assert = (ct: Context): Promise<void> => {
+      deepEqual(ct.request.body, expected);
+      return ct.send();
+    };
 
-    app.use(new BodyParser(), new AssertMiddleware());
+    app.use(new BodyParser(), assert);
+
+    const headers = { "Content-Type": ct_json };
+    const body = JSON.stringify(expected);
+    const response = await request(url, { method: "POST", body, headers });
+    ok(response.statusCode === 200);
+    const text = await response.body.text();
+    deepEqual(text, "");
+  });
+
+  test("JSON (with a custom `parse`)", async () => {
+    const ajv = new AJV();
+    const schema = {
+      properties: {
+        username: { type: "string" },
+        password: { type: "string" },
+      },
+      additionalProperties: false,
+    };
+    const parse: IParse<JTDDataType<typeof schema>> =
+      ajv.compileParser<JTDDataType<typeof schema>>(schema);
+    const body_parser = new BodyParser({ parse });
+
+    const expected = { username: "someusername", password: "somepassword" };
+    const assert = (ct: Context): Promise<void> => {
+      deepEqual(ct.request.body, expected);
+      return ct.send();
+    };
+
+    app.use(body_parser, assert);
 
     const headers = { "Content-Type": ct_json };
     const body = JSON.stringify(expected);
@@ -181,14 +195,12 @@ suite("BodyParser", () => {
 
   test("form", async () => {
     const body = new URLSearchParams({ message: "Hello World" });
-    class AssertMiddleware extends Middleware {
-      public run(ct: Context): Promise<void> {
-        deepEqual(ct.request.body, body);
-        return ct.send();
-      }
-    }
+    const assert = (ct: Context): Promise<void> => {
+      deepEqual(ct.request.body, body);
+      return ct.send();
+    };
 
-    app.use(new BodyParser(), new AssertMiddleware());
+    app.use(new BodyParser(), assert);
 
     const headers = { "Content-Type": ct_form };
     const response = await request(url, {
@@ -203,14 +215,12 @@ suite("BodyParser", () => {
 
   test("encoding", async () => {
     const expected = { message: "Hello World" };
-    class AssertMiddleware extends Middleware {
-      public run(ct: Context): Promise<void> {
-        deepEqual(ct.request.body, expected);
-        return ct.send();
-      }
-    }
+    const assert = (ct: Context): Promise<void> => {
+      deepEqual(ct.request.body, expected);
+      return ct.send();
+    };
 
-    app.use(new BodyParser(), new AssertMiddleware());
+    app.use(new BodyParser(), assert);
 
     const brotli = await brotliCompress(JSON.stringify(expected));
     const doubleGzip = await gzip(await gzip(brotli));
@@ -226,14 +236,12 @@ suite("BodyParser", () => {
 
   test("Missing `Content-Type`", async () => {
     const body = "Hello World";
-    class AssertMiddleware extends Middleware {
-      public run(ct: Context): Promise<void> {
-        ok(typeof ct.request.body === "undefined");
-        return ct.send();
-      }
-    }
+    const assert = (ct: Context): Promise<void> => {
+      ok(typeof ct.request.body === "undefined");
+      return ct.send();
+    };
 
-    app.use(new BodyParser(), new AssertMiddleware());
+    app.use(new BodyParser(), assert);
 
     const headers = { "Content-Type": "" };
 
@@ -245,15 +253,12 @@ suite("BodyParser", () => {
 
   test("Unsupported `Content-Type`", async () => {
     const body = "Hello World";
+    const assert = (ct: Context): Promise<void> => {
+      ok(typeof ct.request.body === "undefined");
+      return ct.send();
+    };
 
-    class AssertMiddleware extends Middleware {
-      public run(ct: Context): Promise<void> {
-        ok(typeof ct.request.body === "undefined");
-        return ct.send();
-      }
-    }
-
-    app.use(new BodyParser(), new AssertMiddleware());
+    app.use(new BodyParser(), assert);
 
     const headers = { "Content-Type": "__unsupported__" };
     const response = await request(url, { method: "POST", body, headers });
@@ -286,9 +291,8 @@ suite("BodyParser", () => {
     deepEqual(text, "");
   });
 
-  teardown((done) => server.close(done));
-
-  suiteTeardown(() => {
-    setGlobalDispatcher(original_agent);
+  teardown((done) => {
+    server.closeIdleConnections();
+    server.close(done);
   });
 });
