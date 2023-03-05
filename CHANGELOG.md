@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.0](https://github.com/binden-js/body/compare/v1.0.0...v1.1.0) (2023-03-05)
+
+### Features
+
+- allow to use a custom `parse` function ([16ae5d9](https://github.com/binden-js/body/commit/16ae5d95346ddda32c119eb624085464eef5735a))
+
 ## 1.0.0 (2022-09-02)
 
 ### ⚠ BREAKING CHANGES

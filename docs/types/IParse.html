@@ -3,12 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="IE=edge" />
-    <title>@binden/body</title>
+    <title>IParse | @binden/body</title>
     <meta name="description" content="Documentation for @binden/body" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="assets/style.css" />
-    <link rel="stylesheet" href="assets/highlight.css" />
-    <script async src="assets/search.js" id="search-script"></script>
+    <link rel="stylesheet" href="../assets/style.css" />
+    <link rel="stylesheet" href="../assets/highlight.css" />
+    <script async src="../assets/search.js" id="search-script"></script>
   </head>
   <body>
     <script>
@@ -17,7 +17,7 @@
     </script>
     <header class="tsd-page-toolbar">
       <div class="tsd-toolbar-contents container">
-        <div class="table-cell" id="tsd-search" data-base=".">
+        <div class="table-cell" id="tsd-search" data-base="..">
           <div class="field">
             <label
               for="tsd-search-field"
@@ -36,7 +36,7 @@
             <li class="state loading">Preparing search index...</li>
             <li class="state failure">The search index is not available</li>
           </ul>
-          <a href="index.html" class="title">@binden/body</a>
+          <a href="../index.html" class="title">@binden/body</a>
         </div>
         <div class="table-cell" id="tsd-widgets">
           <a
@@ -73,140 +73,95 @@
     <div class="container container-main">
       <div class="col-8 col-content">
         <div class="tsd-page-title">
-          <h2>@binden/body</h2>
-        </div>
-        <div class="tsd-panel tsd-typography">
-          <a
-            href="#bindenbody------------"
-            id="bindenbody------------"
-            style="color: inherit; text-decoration: none"
-          >
-            <h1>
-              @binden/body
-              <img
-                src="https://github.com/binden-js/body/workflows/CI/badge.svg"
-                alt="CI Status"
-              />
-              <a href="https://github.com/binden-js/body"
-                ><img
-                  src="https://img.shields.io/github/package-json/v/binden-js/body?style=plastic"
-                  alt="version"
-              /></a>
-              <a href="https://snyk.io/test/github/binden-js/body"
-                ><img
-                  src="https://snyk.io/test/github/binden-js/body/badge.svg"
-                  alt="Known Vulnerabilities"
-              /></a>
-              <a href="https://coveralls.io/github/binden-js/body?branch=main"
-                ><img
-                  src="https://coveralls.io/repos/github/binden-js/body/badge.svg?branch=main"
-                  alt="Coverage Status"
-              /></a>
-              <a href="https://github.com/prettier/prettier"
-                ><img
-                  src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg"
-                  alt="code style: prettier"
-              /></a>
-              <a href="CODE_OF_CONDUCT.md"
-                ><img
-                  src="https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg"
-                  alt="Contributor Covenant"
-              /></a>
-              <a href="https://github.com/semantic-release/semantic-release"
-                ><img
-                  src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg"
-                  alt="semantic-release"
-              /></a>
-              <a href="https://conventionalcommits.org"
-                ><img
-                  src="https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg"
-                  alt="Conventional Commits"
-              /></a>
-              <img
-                src="https://img.shields.io/github/languages/top/binden-js/body"
-                alt="GitHub top language"
-              />
-              <img
-                src="https://img.shields.io/node/v/@binden/body"
-                alt="node version"
-              />
-              <img
-                src="https://img.shields.io/npm/dt/@binden/body"
-                alt="npm downloads"
-              />
-              <img
-                src="https://img.shields.io/github/license/binden-js/body"
-                alt="License"
-              />
-            </h1>
-          </a>
-          <p>
-            <a href="https://github.com/binden-js/binden">Binden</a> body parser
-            middleware. Supports the following
-            <a
-              href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type"
-              >content types</a
-            >
-          </p>
-          <ul>
-            <li><code>application/json</code></li>
-            <li><code>application/x-www-form-urlencoded</code></li>
-            <li><code>plain/text</code></li>
+          <ul class="tsd-breadcrumb">
+            <li><a href="../modules.html">@binden/body</a></li>
+            <li><a href="IParse.html">IParse</a></li>
           </ul>
-          <p>
-            and any combination of the following
-            <a
-              href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding"
-              >encodings</a
-            >
-          </p>
-          <ul>
-            <li><code>br</code></li>
-            <li><code>x-gzip</code></li>
-            <li><code>gzip</code></li>
-            <li><code>deflate</code></li>
-          </ul>
-
-          <a
-            href="#installation"
-            id="installation"
-            style="color: inherit; text-decoration: none"
-          >
-            <h2>Installation</h2>
-          </a>
-          <pre><code class="language-bash"><span class="hl-0">npm </span><span class="hl-1">install</span><span class="hl-0"> </span><span class="hl-1">@binden/body</span>
-</code></pre>
-
-          <a
-            href="#usage"
-            id="usage"
-            style="color: inherit; text-decoration: none"
-          >
-            <h2>Usage</h2>
-          </a>
-          <pre><code class="language-typescript"><span class="hl-2">import</span><span class="hl-0"> </span><span class="hl-3">BodyParser</span><span class="hl-0"> </span><span class="hl-2">from</span><span class="hl-0"> </span><span class="hl-1">&quot;@binden/body&quot;</span><span class="hl-0">;</span><br/><br/><span class="hl-4">class</span><span class="hl-0"> </span><span class="hl-5">MyMiddleware</span><span class="hl-0"> </span><span class="hl-4">extends</span><span class="hl-0"> </span><span class="hl-5">Middleware</span><span class="hl-0"> {</span><br/><span class="hl-0">  </span><span class="hl-4">public</span><span class="hl-0"> </span><span class="hl-6">run</span><span class="hl-0">(</span><span class="hl-3">context</span><span class="hl-0">: </span><span class="hl-5">Context</span><span class="hl-0">): </span><span class="hl-5">void</span><span class="hl-0"> {</span><br/><span class="hl-0">    </span><span class="hl-4">const</span><span class="hl-0"> { </span><span class="hl-7">body</span><span class="hl-0"> } = </span><span class="hl-3">context</span><span class="hl-0">.</span><span class="hl-3">request</span><span class="hl-0">;</span><br/><span class="hl-0">    </span><span class="hl-3">context</span><span class="hl-0">.</span><span class="hl-3">log</span><span class="hl-0">.</span><span class="hl-6">info</span><span class="hl-0">(</span><span class="hl-1">&quot;Body has been parsed (or not)&quot;</span><span class="hl-0">, { </span><span class="hl-3">body</span><span class="hl-0"> });</span><br/><span class="hl-0">  }</span><br/><span class="hl-0">}</span><br/><br/><span class="hl-3">app</span><span class="hl-0">.</span><span class="hl-6">use</span><span class="hl-0">(</span><span class="hl-1">&quot;/deposit&quot;</span><span class="hl-0">, </span><span class="hl-4">new</span><span class="hl-0"> </span><span class="hl-6">Router</span><span class="hl-0">().</span><span class="hl-6">post</span><span class="hl-0">(</span><span class="hl-3">BodyParser</span><span class="hl-0">, </span><span class="hl-4">new</span><span class="hl-0"> </span><span class="hl-6">MyMiddleware</span><span class="hl-0">()));</span>
-</code></pre>
-
-          <a
-            href="#custom-parse-function"
-            id="custom-parse-function"
-            style="color: inherit; text-decoration: none"
-          >
-            <h3>Custom <code>parse</code> function</h3>
-          </a>
-          <pre><code class="language-typescript"><span class="hl-2">import</span><span class="hl-0"> { </span><span class="hl-3">Binden</span><span class="hl-0"> } </span><span class="hl-2">from</span><span class="hl-0"> </span><span class="hl-1">&quot;binden&quot;</span><span class="hl-0">;</span><br/><span class="hl-2">import</span><span class="hl-0"> </span><span class="hl-3">AJV</span><span class="hl-0">, { </span><span class="hl-3">JTDDataType</span><span class="hl-0"> } </span><span class="hl-2">from</span><span class="hl-0"> </span><span class="hl-1">&quot;ajv/dist/jtd.js&quot;</span><span class="hl-0">;</span><br/><span class="hl-2">import</span><span class="hl-0"> </span><span class="hl-3">BodyParser</span><span class="hl-0"> </span><span class="hl-2">from</span><span class="hl-0"> </span><span class="hl-1">&quot;@binden/body&quot;</span><span class="hl-0">;</span><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-7">ajv</span><span class="hl-0"> = </span><span class="hl-4">new</span><span class="hl-0"> </span><span class="hl-6">AJV</span><span class="hl-0">();</span><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-7">schema</span><span class="hl-0"> = {</span><br/><span class="hl-0">  </span><span class="hl-3">properties:</span><span class="hl-0"> { </span><span class="hl-3">username:</span><span class="hl-0"> { </span><span class="hl-3">type:</span><span class="hl-0"> </span><span class="hl-1">&quot;string&quot;</span><span class="hl-0"> }, </span><span class="hl-3">password:</span><span class="hl-0"> { </span><span class="hl-3">type:</span><span class="hl-0"> </span><span class="hl-1">&quot;string&quot;</span><span class="hl-0"> } },</span><br/><span class="hl-0">  </span><span class="hl-3">additionalProperties:</span><span class="hl-0"> </span><span class="hl-4">false</span><span class="hl-0">,</span><br/><span class="hl-0">};</span><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-7">parse</span><span class="hl-0"> = </span><span class="hl-3">ajv</span><span class="hl-0">.</span><span class="hl-6">compileParser</span><span class="hl-0">&lt;</span><span class="hl-5">JTDDataType</span><span class="hl-0">&lt;</span><span class="hl-4">typeof</span><span class="hl-0"> </span><span class="hl-3">schema</span><span class="hl-0">&gt;&gt;(</span><span class="hl-3">schema</span><span class="hl-0">);</span><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-7">body_parser</span><span class="hl-0"> = </span><span class="hl-4">new</span><span class="hl-0"> </span><span class="hl-6">BodyParser</span><span class="hl-0">({ </span><span class="hl-3">parse</span><span class="hl-0"> });</span><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-6">echo</span><span class="hl-0"> = (</span><span class="hl-3">context</span><span class="hl-0">) </span><span class="hl-4">=&gt;</span><span class="hl-0"> {</span><br/><span class="hl-0">  </span><span class="hl-4">const</span><span class="hl-0"> { </span><span class="hl-7">body</span><span class="hl-0"> } = </span><span class="hl-3">context</span><span class="hl-0">.</span><span class="hl-3">request</span><span class="hl-0">;</span><br/><span class="hl-0">  </span><span class="hl-3">context</span><span class="hl-0">.</span><span class="hl-3">log</span><span class="hl-0">.</span><span class="hl-6">info</span><span class="hl-0">(</span><span class="hl-1">&quot;Body has been parsed (or not)&quot;</span><span class="hl-0">, { </span><span class="hl-3">body</span><span class="hl-0"> });</span><br/><span class="hl-0">  </span><span class="hl-2">return</span><span class="hl-0"> </span><span class="hl-3">context</span><span class="hl-0">.</span><span class="hl-6">json</span><span class="hl-0">(</span><span class="hl-3">body</span><span class="hl-0">);</span><br/><span class="hl-0">};</span><br/><span class="hl-4">new</span><span class="hl-0"> </span><span class="hl-6">Binden</span><span class="hl-0">()</span><br/><span class="hl-0">  .</span><span class="hl-6">use</span><span class="hl-0">(</span><span class="hl-1">&quot;/login&quot;</span><span class="hl-0">, </span><span class="hl-4">new</span><span class="hl-0"> </span><span class="hl-6">Router</span><span class="hl-0">().</span><span class="hl-6">post</span><span class="hl-0">(</span><span class="hl-3">BodyParser</span><span class="hl-0">, </span><span class="hl-3">echo</span><span class="hl-0">))</span><br/><span class="hl-0">  .</span><span class="hl-6">createServer</span><span class="hl-0">()</span><br/><span class="hl-0">  .</span><span class="hl-6">listen</span><span class="hl-0">(</span><span class="hl-3">port</span><span class="hl-0">, () </span><span class="hl-4">=&gt;</span><span class="hl-0"> {</span><br/><span class="hl-0">    </span><span class="hl-3">console</span><span class="hl-0">.</span><span class="hl-6">log</span><span class="hl-0">(</span><span class="hl-1">`Server is listening on the port </span><span class="hl-4">${</span><span class="hl-3">port</span><span class="hl-4">}</span><span class="hl-1">`</span><span class="hl-0">);</span><br/><span class="hl-0">  });</span>
-</code></pre>
-
-          <a
-            href="#test"
-            id="test"
-            style="color: inherit; text-decoration: none"
-          >
-            <h3>Test</h3>
-          </a>
-          <pre><code class="language-bash"><span class="hl-0">npm </span><span class="hl-1">test</span>
-</code></pre>
+          <h1>Type alias IParse&lt;T&gt;</h1>
         </div>
+        <div class="tsd-signature">
+          IParse<span class="tsd-signature-symbol">&lt;</span
+          ><span class="tsd-signature-type" data-tsd-kind="Type parameter"
+            >T</span
+          ><span class="tsd-signature-symbol">&gt;</span
+          ><span class="tsd-signature-symbol">:</span>
+          <span class="tsd-signature-symbol">(</span
+          ><span class="tsd-signature-symbol">(</span>input<span
+            class="tsd-signature-symbol"
+            >: </span
+          ><span class="tsd-signature-type">string</span
+          ><span class="tsd-signature-symbol">)</span
+          ><span class="tsd-signature-symbol"> =&gt; </span
+          ><span class="tsd-signature-type" data-tsd-kind="Type parameter"
+            >T</span
+          ><span class="tsd-signature-symbol"> | </span
+          ><span class="tsd-signature-type">undefined</span
+          ><span class="tsd-signature-symbol">)</span>
+        </div>
+        <section class="tsd-panel tsd-type-parameters">
+          <h4>Type Parameters</h4>
+          <ul class="tsd-type-parameters">
+            <li>
+              <h4>T = <span class="tsd-signature-type">unknown</span></h4>
+            </li>
+          </ul>
+        </section>
+        <div class="tsd-type-declaration">
+          <h4>Type declaration</h4>
+          <ul class="tsd-parameters">
+            <li class="tsd-parameter-signature">
+              <ul
+                class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias"
+              >
+                <li class="tsd-signature" id="__type.__type-1">
+                  <span class="tsd-signature-symbol">(</span>input<span
+                    class="tsd-signature-symbol"
+                    >: </span
+                  ><span class="tsd-signature-type">string</span
+                  ><span class="tsd-signature-symbol">)</span
+                  ><span class="tsd-signature-symbol">: </span
+                  ><span
+                    class="tsd-signature-type"
+                    data-tsd-kind="Type parameter"
+                    >T</span
+                  ><span class="tsd-signature-symbol"> | </span
+                  ><span class="tsd-signature-type">undefined</span>
+                </li>
+                <li class="tsd-description">
+                  <div class="tsd-parameters">
+                    <h4 class="tsd-parameters-title">Parameters</h4>
+                    <ul class="tsd-parameter-list">
+                      <li>
+                        <h5>
+                          input: <span class="tsd-signature-type">string</span>
+                        </h5>
+                      </li>
+                    </ul>
+                  </div>
+                  <h4 class="tsd-returns-title">
+                    Returns
+                    <span
+                      class="tsd-signature-type"
+                      data-tsd-kind="Type parameter"
+                      >T</span
+                    ><span class="tsd-signature-symbol"> | </span
+                    ><span class="tsd-signature-type">undefined</span>
+                  </h4>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <aside class="tsd-sources">
+          <ul>
+            <li>
+              Defined in
+              <a href="https://github.com/binden-js/body/blob/main/index.ts#L17"
+                >index.ts:17</a
+              >
+            </li>
+          </ul>
+        </aside>
       </div>
       <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
         <div class="tsd-navigation settings">
@@ -385,8 +340,8 @@
             </summary>
             <div class="tsd-accordion-details">
               <ul>
-                <li class="current selected">
-                  <a href="modules.html">@binden/body</a>
+                <li>
+                  <a href="../modules.html">@binden/body</a>
                   <ul></ul>
                 </li>
               </ul>
@@ -396,7 +351,7 @@
         <nav class="tsd-navigation secondary menu-sticky">
           <ul>
             <li class="tsd-kind-class">
-              <a href="classes/BodyParser.html" class="tsd-index-link"
+              <a href="../classes/BodyParser.html" class="tsd-index-link"
                 ><svg
                   class="tsd-kind-icon"
                   width="24"
@@ -424,7 +379,7 @@
             </li>
             <li class="tsd-kind-interface">
               <a
-                href="interfaces/IBodyParserOptions.html"
+                href="../interfaces/IBodyParserOptions.html"
                 class="tsd-index-link"
                 ><svg
                   class="tsd-kind-icon"
@@ -452,7 +407,7 @@
               >
             </li>
             <li class="tsd-kind-type-alias">
-              <a href="types/IBodyContentType.html" class="tsd-index-link"
+              <a href="IBodyContentType.html" class="tsd-index-link"
                 ><svg
                   class="tsd-kind-icon"
                   width="24"
@@ -478,8 +433,8 @@
                 >IBody<wbr />Content<wbr />Type</a
               >
             </li>
-            <li class="tsd-kind-type-alias">
-              <a href="types/IParse.html" class="tsd-index-link"
+            <li class="current tsd-kind-type-alias">
+              <a href="IParse.html" class="tsd-index-link"
                 ><svg
                   class="tsd-kind-icon"
                   width="24"
@@ -492,7 +447,7 @@
               >
             </li>
             <li class="tsd-kind-variable">
-              <a href="variables/default.html" class="tsd-index-link"
+              <a href="../variables/default.html" class="tsd-index-link"
                 ><svg
                   class="tsd-kind-icon"
                   width="24"
@@ -523,6 +478,6 @@
       </div>
     </div>
     <div class="overlay"></div>
-    <script src="assets/main.js"></script>
+    <script src="../assets/main.js"></script>
   </body>
 </html>
