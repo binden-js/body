@@ -64,7 +64,7 @@ suite("BodyParser", () => {
   test("constructor (with an invalid `parse` option)", () => {
     throws(
       () => new BodyParser({ parse: 2 as unknown as IParse }),
-      new TypeError("`parse` is not a function")
+      new TypeError("`parse` is not a function"),
     );
   });
 
