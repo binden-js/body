@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.1](https://github.com/binden-js/body/compare/v1.1.0...v1.1.1) (2023-07-13)
+
+### Dependencies
+
+- bump `binden` from `1.2.0` to `1.2.1` ([320bf27](https://github.com/binden-js/body/commit/320bf27eaa782749071df6d803a61ca7238f55c6))
+
 ## [1.1.0](https://github.com/binden-js/body/compare/v1.0.0...v1.1.0) (2023-03-05)
 
 ### Features
