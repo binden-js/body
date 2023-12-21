@@ -101,8 +101,8 @@ export class BodyParser<T = unknown> extends Middleware {
         type === ct_json
           ? this.#parse(body)
           : type === ct_form
-          ? new URLSearchParams(body)
-          : body;
+            ? new URLSearchParams(body)
+            : body;
     } catch (error: unknown) {
       log.debug("Request body does not match provided Content-Type", {
         error,
