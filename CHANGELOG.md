@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.0.0](https://github.com/binden-js/body/compare/v1.1.1...v2.0.0) (2024-01-30)
+
+### ⚠ BREAKING CHANGES
+
+- drop `Node.js` `<20.11.0` support
+
+### Performance Improvements
+
+- drop `Node.js` `<20.11.0` support ([1dd0c71](https://github.com/binden-js/body/commit/1dd0c7151f263aa8f4574962223ece7654af6d46))
+
 ## [1.1.1](https://github.com/binden-js/body/compare/v1.1.0...v1.1.1) (2023-07-13)
 
 ### Dependencies
