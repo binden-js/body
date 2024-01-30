@@ -6,8 +6,8 @@
   "type": "module",
   "types": "dist/index.d.ts",
   "engines": {
-    "node": ">=18.8.0",
-    "npm": ">=8.18.0"
+    "node": ">=20.11.0",
+    "npm": ">=10.2.4"
   },
   "scripts": {
     "build": "tsc",
@@ -25,7 +25,7 @@
     "postpublish": "npm run build:remove",
     "prebuild": "npm run build:remove",
     "preinstall:clean": "rm -rf node_modules package-lock.json",
-    "prepare": "husky install",
+    "prepare": "husky",
     "prepublishOnly": "npm run build",
     "prettier": "prettier -c .",
     "prettier:write": "prettier -c -w .",
@@ -52,10 +52,10 @@
   },
   "homepage": "https://github.com/binden-js/body#readme",
   "peerDependencies": {
-    "binden": "^1.2.1"
+    "binden": "^1.2.5"
   },
   "devDependencies": {
-    "@binden/commitlint-config": "^1.0.2",
+    "@binden/commitlint-config": "^2.0.0",
     "@binden/semantic-release-config": "^2.0.0",
     "@binden/tsconfig": "^1.0.2",
     "@types/mocha": "^10.0.6",
