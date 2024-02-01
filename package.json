@@ -52,7 +52,7 @@
   },
   "homepage": "https://github.com/binden-js/body#readme",
   "peerDependencies": {
-    "binden": "^2.0.1"
+    "binden": "^2.0.2"
   },
   "devDependencies": {
     "@binden/commitlint-config": "^2.1.0",
